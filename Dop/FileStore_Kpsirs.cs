@@ -3,26 +3,28 @@ using System.Collections;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using Dt.Kpsirs.Common.File;
 //using Dt.Kiuss.Core.Model.File;
 //using Microsoft.AspNetCore.Http;
 using Dt.Kpuirs.Common.File.Dto;
 using Microsoft.Extensions.Primitives;
 using Minio;
+using Minio.DataModel;
 using Minio.DataModel.Args;
 using Minio.DataModel.Notification;
 using Minio.Exceptions;
 
-namespace Dt.Kiuss.Supervisor.Domain.Utils.File
+namespace Dt.Kpsirs.Common.File.Files
 {
     /// <summary>
     /// Провайдер хранилища файлов
     /// </summary>
-    public class FileStore : IFileStore
+    public class FileStoreKpsirs : IFileStore
     {
-        private string bucketName = "bucket-kiuss";
-        private string rootFolderName = "D:\\practice\\data";
+        private string bucketName = "bucket-kpsirs";
+        private string rootFolderName = "D:\\practice\\data2";
         IMinioClient minio;
-        public FileStore(string bucketName)
+        public FileStoreKpsirs(string bucketName)
         {
             // при создании "хранилища" подключаемся к api MinIO Object Store, используя логин и пароль
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
@@ -44,11 +46,11 @@ namespace Dt.Kiuss.Supervisor.Domain.Utils.File
         /// <param name="drillingProjectId">Идентификатор ПБ</param>
         /// <param name="fileName">Наименование файла</param>
         /// <returns>Содержимое файла</returns>
-        public async Task<FileContentDto> LoadFile(Guid fileId, Guid drillingProjectId, string fileName)
+        public async Task<FileContentDto> LoadFile(Guid fileId, Guid drillingProjectId, string fileName, FileType fileType)
         {
             string objectName = fileId.ToString() + "." + fileName;
             string folderName = drillingProjectId.ToString();
-            string filePath = rootFolderName + "\\" + folderName + "\\" + objectName;
+            string filePath = rootFolderName + "\\" + folderName + "\\" + fileType.ToString() + "\\" + objectName;
             byte[] buffer;
             try
             {
@@ -91,13 +93,13 @@ namespace Dt.Kiuss.Supervisor.Domain.Utils.File
         /// <param name="fileContent">Содержимое файла</param>
         /// <param name="fileName">Наименование файла</param>
         /// <returns>Результат асинхронной операции</returns>
-        public async Task CreateFile(Guid fileId, Guid drillingProjectId, byte[] fileContent, string fileName)
+        public async Task CreateFile(Guid fileId, Guid drillingProjectId, byte[] fileContent, string fileName, FileType fileType)
         {
             var location = "us-east-1";
 
             string objectName = fileId.ToString()+"." + fileName;
             string folderName = drillingProjectId.ToString();
-            string filePath = rootFolderName+"\\"+ folderName + "\\" + objectName;
+            string filePath = rootFolderName + "\\" + folderName + "\\" + fileType.ToString() + "\\" + objectName;
 
             using (MemoryStream fileStream = new MemoryStream(fileContent))
             {
@@ -120,8 +122,6 @@ namespace Dt.Kiuss.Supervisor.Domain.Utils.File
                         .WithObject(objectName)
                         .WithStreamData(fileStream)
                         .WithObjectSize(fileContent.Length);
-                    //.WithFileName(filePath);
-                    //.WithContentType(contentType);
                     _ = await minio.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
                     Console.WriteLine($"\nSuccessfully uploaded {objectName}");
                 }
@@ -138,11 +138,11 @@ namespace Dt.Kiuss.Supervisor.Domain.Utils.File
         /// <param name="fileId">Идентификатор файла</param>
         /// <param name="drillingProjectId">Идентификатор ПБ</param>
         /// <param name="fileName">Наименование файла</param>
-        public async void DeleteFile(Guid fileId, Guid drillingProjectId, string fileName)
+        public async void DeleteFile(Guid fileId, Guid drillingProjectId, string fileName, FileType fileType)
         {
             string objectName = fileId.ToString() + "." + fileName;
             string folderName = drillingProjectId.ToString();
-            string filePath = rootFolderName + "\\" + folderName + "\\" + objectName;
+            string filePath = rootFolderName + "\\" + folderName + "\\" + fileType.ToString() + "\\" + objectName;
             string versionId = null;
 
             try
@@ -153,6 +153,10 @@ namespace Dt.Kiuss.Supervisor.Domain.Utils.File
 
                 minio.RemoveObjectAsync(args).ConfigureAwait(false);
 
+                //else
+                //{
+                //    Console.WriteLine($"There is no such object:{objectName} or bucket:{bucketName}");
+                //}
             }
             catch (Exception e)
             {
@@ -180,6 +184,43 @@ namespace Dt.Kiuss.Supervisor.Domain.Utils.File
                 Console.WriteLine("Error occurred: " + e);
             }
         }
+        //private static async Task ListOfObjects(IMinioClient minio, string bucketName)
+        //{
+        //    string prefix = null;
+        //    bool recursive = true;
+        //    bool versions = false;
+
+        //    try
+        //    {
+        //        // Just list of objects
+        //        // Check whether 'mybucket' exists or not.
+        //        var bktExistArgs = new BucketExistsArgs()
+        //                .WithBucket(bucketName);
+        //        var found = await minio.BucketExistsAsync(bktExistArgs).ConfigureAwait(false);
+        //        if (found)
+        //        {
+        //            // List objects from 'my-bucketname'
+        //            var getListObjectsTask = await minio.ListObjectsAsync(bucketName).ConfigureAwait(false);
+        //            var args = new ListObjectArgs()
+        //                                      .WithBucket(bucketName)
+        //                                      .WithPrefix("prefix")
+        //                                      .WithRecursive(true);
+        //            IObservable<Item> observable = minio.ListObjectsAsync(args);
+        //            IDisposable subscription = observable.Subscribe(
+        //                    item => Console.WriteLine("OnNext: {0}", item.Key),
+        //                    ex => Console.WriteLine("OnError: {0}", ex.Message),
+        //                    () => Console.WriteLine("OnComplete: {0}"));
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine($"{bucketName} does not exist");
+        //        }
+        //    }
+        //    catch (MinioException e)
+        //    {
+        //        Console.WriteLine("Error occurred: " + e);
+        //    }
+        //}
 
     }
 }
