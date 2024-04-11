@@ -51,8 +51,6 @@ namespace ConsoleApp1
             }
         }
 
-
-
         private static void Load()
         {
             // сбор данных о получаемом файле
