@@ -5,10 +5,14 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<CodeAnalysisRuleSet>ConsoleApp1\bin\Debug\net6.0\StyleCop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
     <PackageReference Include="Minio.AspNetCore" Version="6.0.0" />
+    <PackageReference Include="StyleCop" Version="6.2.0" />
   </ItemGroup>
 
 </Project>

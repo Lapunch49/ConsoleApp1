@@ -109,7 +109,65 @@ namespace ConsoleApp1
                 objectstat = objstatreply
 
             });
-        }
-    }
 
+
+        }
+        //private static async Task ListOfObjects(IMinioClient minio, string bucketName)
+        //{
+        //    string prefix = null;
+        //    bool recursive = true;
+        //    bool versions = false;
+
+        //    try
+        //    {
+        //        // Just list of objects
+        //        // Check whether 'mybucket' exists or not.
+        //        var bktExistArgs = new BucketExistsArgs()
+        //                .WithBucket(bucketName);
+        //        var found = await minio.BucketExistsAsync(bktExistArgs).ConfigureAwait(false);
+        //        if (found)
+        //        {
+        //            // List objects from 'my-bucketname'
+        //            var args = new ListObjectArgs()
+        //                                      .WithBucket(bucketName)
+        //                                      .WithPrefix(prefix)
+        //                                      .WithRecursive(true);
+        //            IObservable<Item> observable = minio.ListObjectsAsync(args);
+        //            IDisposable subscription = observable.Subscribe(
+        //                    item => Console.WriteLine("OnNext: {0}", item.Key),
+        //                    ex => Console.WriteLine("OnError: {0}", ex.Message),
+        //                    () => Console.WriteLine("OnComplete: {0}"));
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine($"{bucketName} does not exist");
+        //        }
+        //    }
+        //    catch (MinioException e)
+        //    {
+        //        Console.WriteLine("Error occurred: " + e);
+        //    }
+        //}
+
+        //private static async Task ListOfBuckets(IMinioClient minio)
+        //{
+        //    var bucketName = "mybucket";
+        //    try
+        //    {
+        //        var getListBucketsTask = await minio.ListBucketsAsync().ConfigureAwait(false);
+
+        //        // Iterate over the list of buckets.
+        //        foreach (var bucket in getListBucketsTask.Buckets)
+        //        {
+        //            Console.WriteLine(bucket.Name + " " + bucket.CreationDateDateTime);
+        //        }
+
+        //    }
+        //    catch (MinioException e)
+        //    {
+        //        Console.WriteLine("Error occurred: " + e);
+        //    }
+        //}
+
+    }
 }
