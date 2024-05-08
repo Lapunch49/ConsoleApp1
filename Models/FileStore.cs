@@ -1,5 +1,4 @@
-﻿using Dt.Kpsirs.Common.File;
-using Dt.Kpuirs.Common.File.Dto;
+﻿using Dt.Kpsirs.Common.File.Dto;
 using Microsoft.Extensions.Configuration;
 using Minio.DataModel.Args;
 using Minio;
@@ -10,10 +9,11 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualBasic.FileIO;
+using Dt.File.MinioConfig;
 
 namespace Dt.File.Store
 {
-    public record MinioConfiguration(string endpoint, string accessKey, string secretKey, string rootFolderName, string bucketName, string location);
+    //public record MinioConfiguration(string endpoint, string accessKey, string secretKey, string rootFolderName, string bucketName, string location);
     public class FileStore
     {
         protected string bucketName;
@@ -22,17 +22,8 @@ namespace Dt.File.Store
 
         IMinioClient minio;
 
-        public FileStore()
+        public FileStore(MinioConfiguration minioConfig)
         {
-            IConfigurationRoot config = new ConfigurationBuilder()
-                .AddJsonFile("config.json")
-                .AddEnvironmentVariables()
-                .Build();
-
-            MinioConfiguration minioConfig = new MinioConfiguration("", "", "", "", "", "");
-
-            config.GetSection("MINIO").Bind(minioConfig);
-
             var endpoint = minioConfig.endpoint;
             var accessKey = minioConfig.accessKey;
             var secretKey = minioConfig.secretKey;

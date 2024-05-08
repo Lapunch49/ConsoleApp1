@@ -4,10 +4,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Dt.Kpsirs.Common.File;
-//using Dt.Kiuss.Core.Model.File;
-//using Microsoft.AspNetCore.Http;
-using Dt.Kpuirs.Common.File.Dto;
+using Dt.Kpsirs.Common.File.Dto;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 using Minio;
@@ -17,13 +14,14 @@ using Minio.DataModel.Notification;
 using Minio.Exceptions;
 using Microsoft.AspNetCore.Builder;
 using Dt.File.Store;
+using Dt.File.MinioConfig;
 
 namespace Dt.Kpsirs.Common.File.Files
 {
-    public record MinioConfiguration(string endpoint, string accessKey, string secretKey, string rootFolderName, string bucketName, string location);
+    //public record MinioConfiguration(string endpoint, string accessKey, string secretKey, string rootFolderName, string bucketName, string location);
     public class FileStoreKpsirs : FileStore, IFileStore
     {
-        public FileStoreKpsirs()
+        public FileStoreKpsirs(MinioConfiguration minioConfig) : base(minioConfig)
         {
             
         }

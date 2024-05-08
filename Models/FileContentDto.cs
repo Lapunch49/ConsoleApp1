@@ -1,4 +1,4 @@
-﻿namespace Dt.Kpuirs.Common.File.Dto;
+﻿namespace Dt.Kpsirs.Common.File.Dto;
 
 /// <summary>
 /// Содержимое файла

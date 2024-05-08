@@ -1,0 +1,18 @@
+{
+	"exclude": [
+		"**/bin",
+		"**/bower_components",
+		"**/jspm_packages",
+		"**/node_modules",
+		"**/obj",
+		"**/platforms"
+	],
+	"MINIO": {
+		"endpoint": "localhost:9000",
+		"accessKey": "chulpan",
+		"secretKey": "minio123",
+		"rootFolderName": "D:\\practice\\data2",
+		"bucketName": "bucket-1",
+		"location": "us-east-1"
+	}
+}
